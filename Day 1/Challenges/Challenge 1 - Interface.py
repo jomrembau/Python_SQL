@@ -1,4 +1,6 @@
-def interface():
+from database import create_database_and_tables
+
+def main_menu():
     print("\nWelcome to Freight Manager")
 
     print("""
@@ -32,12 +34,13 @@ def interface():
                 print("Choice 5 Selected")
 
             case "x":
-                print("Goodbye")
+                print("Goodbye!")
 
             case _:
                 print("Invalid input")
 
 if __name__ == "__main__":
-    interface()
+    create_database_and_tables(filename="freight_prod.db")
+    main_menu()
 
 
