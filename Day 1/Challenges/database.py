@@ -30,3 +30,11 @@ def create_database_and_tables(filename):
     connection.executescript(ddl)
 
     return connection
+
+def add_box(connection, box):
+    try:
+        connection.execute("INSERT INTO boxes (name, x, y, z) VALUES (?,?,?,?)", box)
+        connection.commit()
+        print("\nBox saved successfully!\n")
+    except sqlite3.IntegrityError as e:
+        print("\nCould not persist to Database: ", e, "\n")
