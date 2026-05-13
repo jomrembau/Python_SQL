@@ -6,6 +6,9 @@ def create_database_and_tables(filename):
 
     connection = sqlite3.connect(filename)
 
+    connection.execute("PRAGMA foreign_keys = 1;")
+    connection.commit()
+
     ddl = """
         DROP TABLE IF EXISTS boxes;
         CREATE TABLE boxes (
