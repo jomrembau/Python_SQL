@@ -1,4 +1,4 @@
-from database import create_database_and_tables, add_box, get_all_boxes
+from database import create_database_and_tables, add_box, get_all_boxes, get_box
 from tabulate import tabulate
 
 def retrieve_numeric_input(called):
@@ -34,6 +34,16 @@ def display_box_types():
         tablefmt="psql" + "\n"
                             ))
 
+def load_box_menu():
+    n = input("Enter the name of the box: ")
+
+    box = get_box(connection, by_name=n)
+
+    if not box:
+        print("A box by that name could not be found.")
+    else:
+        container_id = input("Enter the id of the container to load the box to: ")
+
 def main_menu():
     print("\nWelcome to Freight Manager")
 
@@ -59,7 +69,7 @@ def main_menu():
                 display_box_types()
 
             case "3":
-                print("Choice 3 Selected")
+                load_box_menu()
 
             case "4":
                 print("Choice 4 Selected")

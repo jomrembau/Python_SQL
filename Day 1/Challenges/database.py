@@ -45,3 +45,14 @@ def get_all_boxes(connection):
 
     if fetched:
         return [Box(*b) for b in fetched]
+
+def get_box(connection, by_name=None, by_id=None):
+    fetched = None
+
+    if by_name:
+        fetched = connection.execute("SELECT * FROM boxes WHERE name = ?", (by_name,)).fetchone()
+    elif by_id:
+        fetched = connection.execute("SELECT * FROM boxes WHERE id = ?", (by_name,)).fetchone()
+
+    if fetched:
+        return Box(*fetched)
