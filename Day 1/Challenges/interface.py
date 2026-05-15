@@ -1,4 +1,4 @@
-from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container,seed_data, get_all_containers
+from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container,seed_data, get_all_containers, get_all_freight
 from tabulate import tabulate
 
 def retrieve_numeric_input(called):
@@ -45,16 +45,39 @@ def load_box_menu():
         box_dims = box.height * box.width * box.length
         container_id = input("Enter the id of the container to load the box to: ")
 
-        container = get_container(connection, container_id)
+        container = get_container(connection, by_id=container_id)
 
-        if container is None or(container.occupied_volume + box_dims <= 30):
+        if container is None:
             add_box_to_container(connection, box.id, container_id)
+
+        elif container.occupied_volume + box_dims <= 30:
+            add_box_to_container(connection, box.id, container_id)
+
         else:
-            print(f"Container {container_id} does not have enough space for box {box.id}.")
+            print(f"Container {container_id} does not have enough space.")
 
 def display_containers():
     containers = get_all_containers(connection)
     print("\n" + tabulate(containers, headers =["container_id", "occupied_volume"], tablefmt=  "fancy_grid") + "\n")
+
+def display_summary():
+    freight = get_all_freight(connection)
+    containers = get_all_containers(connection) or ()
+
+    nr_containers = len(containers)
+
+    if not nr_containers:
+        print("\nThere is no contracted freight.\n")
+        return
+
+    contracted_volume = sum([c.occupied_volume for c in containers])
+    revenue = round(contracted_volume * 40,2)
+    cost = nr_containers * config.get('COST_PER_CONTAINER')
+
+    print(f"\nContracted {len(freight)} box(es) in {len(containers)} containers(s).")
+    print(f"The total contracted volume is {contracted_volume} m3.")
+    print(f"Estimated cost of carrying this freight is: ${cost}.")
+    print(f"Estimated P/L: ${round(revenue - cost,2)}\n")
 
 def main_menu():
     print("\nWelcome to Freight Manager")
@@ -98,6 +121,8 @@ def main_menu():
 if __name__ == "__main__":
     connection = create_database_and_tables(filename="freight_prod.db")
     seed_data(connection)
+    config = get_config(connection)
     main_menu()
+    connection.close()
 
 
