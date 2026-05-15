@@ -38,6 +38,19 @@ def create_database_and_tables(filename):
 
     return connection
 
+def seed_data(connection):
+    starter_boxes = [
+        ('a1', 1.2, 2.2, 1.12),
+        ('a2', 1.2, 2.2, 1.22),
+        ('a3', 1.2, 2.2, 1.32),
+        ('a4', 1.2, 2.2, 1.2),
+        ('a5', 1.2, 2.2, 1.2),
+        ('a6', 1.2, 2.2, 1.2)
+    ]
+
+    connection.executemany("INSERT INTO boxes (name,x,y,z) VALUES(?,?,?,?);", starter_boxes)
+    connection.commit()
+
 def add_box(connection, box):
     try:
         connection.execute("INSERT INTO boxes (name, x, y, z) VALUES (?,?,?,?)", box)

@@ -1,4 +1,4 @@
-from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container
+from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container,seed_data
 from tabulate import tabulate
 
 def retrieve_numeric_input(called):
@@ -93,6 +93,7 @@ def main_menu():
 
 if __name__ == "__main__":
     connection = create_database_and_tables(filename="freight_prod.db")
+    seed_data(connection)
     main_menu()
 
 
