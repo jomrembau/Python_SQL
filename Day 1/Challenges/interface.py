@@ -1,4 +1,4 @@
-from database import create_database_and_tables, add_box, get_all_boxes, get_box
+from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container
 from tabulate import tabulate
 
 def retrieve_numeric_input(called):
@@ -42,7 +42,15 @@ def load_box_menu():
     if not box:
         print("A box by that name could not be found.")
     else:
+        box_dims = box.height * box.width * box.length
         container_id = input("Enter the id of the container to load the box to: ")
+
+        container = get_container(connection, container_id)
+
+        if container is None or(container.occupied_volume + box_dims <= 30):
+            
+        else:
+            print(f"Container {container_id} does not have enough space for box {box.id}.")
 
 def main_menu():
     print("\nWelcome to Freight Manager")

@@ -1,5 +1,5 @@
 import sqlite3
-from data_types import Box
+from data_types import Box, Container
 
 def create_database_and_tables(filename):
     if not filename:
@@ -26,6 +26,12 @@ def create_database_and_tables(filename):
             container_id INTEGER NOT NULL,
             box_id INTEGER NOT NULL REFERENCES boxes(id) ON DELETE CASCADE
             );
+        
+        CREATE VIEW IF NOT EXISTS containers as
+        SELECT container_id, round(sum(x*y*z)) as occupied_volume FROM freight f
+        LEFT JOIN boxes b
+        ON f.box_id = b.id
+        GROUP BY container_id;
     """
 
     connection.executescript(ddl)
@@ -56,3 +62,12 @@ def get_box(connection, by_name=None, by_id=None):
 
     if fetched:
         return Box(*fetched)
+
+def get_container(connection, by_id=None):
+    fetched = None
+
+    if by_id:
+        fetched = connection.execute("SELECT * FROM containers WHERE container_id = ?", (by_id,)).fetchone()
+
+    if fetched:
+        return Container(*fetched)
