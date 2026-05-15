@@ -1,4 +1,4 @@
-from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container,seed_data
+from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container,seed_data, get_all_containers
 from tabulate import tabulate
 
 def retrieve_numeric_input(called):
@@ -52,6 +52,10 @@ def load_box_menu():
         else:
             print(f"Container {container_id} does not have enough space for box {box.id}.")
 
+def display_containers():
+    containers = get_all_containers(connection)
+    print("\n" + tabulate(containers, headers =["container_id", "occupied_volume"], tablefmt=  "fancy_grid") + "\n")
+
 def main_menu():
     print("\nWelcome to Freight Manager")
 
@@ -80,7 +84,7 @@ def main_menu():
                 load_box_menu()
 
             case "4":
-                print("Choice 4 Selected")
+                display_containers()
 
             case "5":
                 print("Choice 5 Selected")

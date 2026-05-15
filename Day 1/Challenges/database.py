@@ -85,6 +85,12 @@ def get_container(connection, by_id=None):
     if fetched:
         return Container(*fetched)
 
+def get_all_containers(connection):
+    fetched = connection.execute("SELECT * FROM containers;").fetchall()
+
+    if fetched:
+        return [Container(*i) for i in fetched]
+
 def add_box_to_container(connection, box_id=None, container_id=None):
     if box_id is not None and container_id is not None:
         connection.execute("INSERT INTO freight (container_id, box_id) VALUES (:cid, :bid)", {
