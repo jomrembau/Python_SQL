@@ -55,9 +55,9 @@ def get_all_boxes(connection):
 def get_box(connection, by_name=None, by_id=None):
     fetched = None
 
-    if by_name:
+    if by_name is not None:
         fetched = connection.execute("SELECT * FROM boxes WHERE name = ?", (by_name,)).fetchone()
-    elif by_id:
+    elif by_id is not None:
         fetched = connection.execute("SELECT * FROM boxes WHERE id = ?", (by_name,)).fetchone()
 
     if fetched:
@@ -66,8 +66,16 @@ def get_box(connection, by_name=None, by_id=None):
 def get_container(connection, by_id=None):
     fetched = None
 
-    if by_id:
+    if by_id is not None:
         fetched = connection.execute("SELECT * FROM containers WHERE container_id = ?", (by_id,)).fetchone()
 
     if fetched:
         return Container(*fetched)
+
+def add_box_to_container(connection, box_id=None, container_id=None):
+    if box_id is not None and container_id is not None:
+        connection.execute("INSERT INTO freight (container_id, box_id) VALUES (:cid, :bid)", {
+            "cid": container_id,
+            "bid": box_id
+        })
+        connection.commit()

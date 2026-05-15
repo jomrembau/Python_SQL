@@ -1,4 +1,4 @@
-from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container
+from database import create_database_and_tables, add_box, get_all_boxes, get_box, get_container, add_box_to_container
 from tabulate import tabulate
 
 def retrieve_numeric_input(called):
@@ -48,7 +48,7 @@ def load_box_menu():
         container = get_container(connection, container_id)
 
         if container is None or(container.occupied_volume + box_dims <= 30):
-            
+            add_box_to_container(connection, box.id, container_id)
         else:
             print(f"Container {container_id} does not have enough space for box {box.id}.")
 
